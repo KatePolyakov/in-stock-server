@@ -6,4 +6,5 @@ Create a new MySQL database schema: instock
 
 Start the local server with: npm run dev
 
-example routes: http://localhost:8080/warehouses
+example routes: http://localhost:8080/api/warehouses
+http://localhost:8080/api/inventories-warehouses

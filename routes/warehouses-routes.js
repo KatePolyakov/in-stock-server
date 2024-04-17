@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const warehousesController = require('../controllers/warehouses-controller');
 
-router.route('/').get(warehousesController.index);
+router.route('/warehouses').get(warehousesController.index);
 
-module.exports = router
+module.exports = router;
