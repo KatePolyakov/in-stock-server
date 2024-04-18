@@ -1,4 +1,5 @@
 const knex = require('knex')(require('../knexfile'));
+const { isValidInventoryData } = require('../utils/validator');
 
 const inventoryWarehouseList = async (_req, res) => {
   try {
@@ -14,27 +15,9 @@ const inventoryWarehouseList = async (_req, res) => {
 }
 
 const postInventoryItem = async (req, res) => {
-  const { 
-    warehouse_id, 
-    item_name, 
-    description, 
-    category, 
-    status, 
-    quantity 
-  } = req.body
-  const errors = []
-  if (!warehouse_id || !item_name || !description || !category || !status || !quantity) {
-    errors.push('Missing properties in the request body')
-  }
-  const warehouseExists = await knex('warehouses').where('id', warehouse_id).first()
-  if (!warehouseExists) {
-    errors.push('Warehouse_id does not exist')
-  }
-  if(isNaN(quantity)) {
-    errors.push('Quantity must be a number')
-  }
-  if(errors.length > 0) {
-    return res.status(400).json({ errors })
+  const errors = await isValidInventoryData(req,res)
+  if (errors.length > 0) {
+    return res.status(400).json({errors})
   }
   const postData = req.body
   try {
@@ -51,7 +34,26 @@ const postInventoryItem = async (req, res) => {
   }
 }
 
+const updateInventoryItem = async (req, res) => {
+  const errors = await isValidInventoryData(req, res)
+  if(errors.length > 0) {
+    return res.status(400).json({errors})
+  }
+  const { inventoryId } = req.params
+  const putData = req.body
+  try {
+    const updatedData = await knex('inventories')
+    .where({ id: inventoryId })
+    .update(putData)
+
+    res.status(200).json({ updatedData })
+  } catch (err) {
+    res.status(500).json({ message: `Error updating inventory item`})
+  }
+}
+
 module.exports = {
   inventoryWarehouseList,
-  postInventoryItem
+  postInventoryItem,
+  updateInventoryItem,
 };
