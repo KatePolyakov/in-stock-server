@@ -29,3 +29,8 @@ CREATE a New Warehouse Request body example:
     "contact_phone": "+1 (919) 797-2875",
     "contact_email": "jschuppe@instock.com"
 }
+
+DELETE APIs:
+
+http://localhost:8080/api/warehouses/:warehouse_id
+i.e. http://localhost:8080/api/warehouses/10
