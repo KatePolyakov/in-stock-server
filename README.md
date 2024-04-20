@@ -15,6 +15,8 @@ http://localhost:8080/api/inventories-warehouses
 
 http://localhost:8080/api/warehouses/:warehouse_id
 
+http://localhost:8080/api/inventories/:inventoryId
+
 POST APIs:
 http://localhost:8080/api/warehouses
 
