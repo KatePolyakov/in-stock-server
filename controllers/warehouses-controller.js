@@ -1,9 +1,16 @@
 const knex = require('knex')(require('../knexfile'));
 const { isValidEmail, isValidPhone } = require('../utils/validator');
 
-const index = async (_req, res) => {
+const index = async (req, res) => {
   try {
-    const data = await knex('warehouses');
+    
+    const { sort_by, order_by } = req.query;
+    const data = await knex('warehouses')
+    .orderBy( sort_by, order_by);
+
+    // console.log(req, sort_by, order_by );
+    // .orderBy('warehouse_name', 'desc');
+    // .orderBy('warehouse_name', 'asc');
     res.status(200).json(data);
   } catch (err) {
     res.status(400).send(`Error retrieving Users: ${err}`);
@@ -99,6 +106,30 @@ const deleteWarehouse = async (req, res) => {
     res.status(500).json({
       message: `Unable to delete Warehouse: ${error}`,
     });
+  }
+};
+const update = async (req, res) => {
+  try {
+      const rowsUpdated = await knex("user")
+          .where({ id: req.params.id })
+          .update(req.body);
+
+      //chexk if anything was updatd or found
+      if (!rowsUpdated) { // equal to rowsupdated === 0
+          return res.status(404).json({
+              message: `User with ID ${req.params.id} not found` 
+          });
+      }
+
+      //get anupdated record
+      const updatedUser = await knex('user')
+          .where({ id: req.params.id });
+
+      res.status(201).json(updatedUser);
+  } catch (error) {
+      res.status(500).json({
+          message: `Unable to update user with ID ${req.params.id}: ${error}` 
+        }); 
   }
 };
 
