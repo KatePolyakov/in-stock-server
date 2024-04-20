@@ -1,12 +1,15 @@
 const knex = require('knex')(require('../knexfile'));
 const { isValidInventoryData } = require('../utils/validator');
 
-const inventoryWarehouseList = async (_req, res) => {
+const inventoryWarehouseList = async (req, res) => {
   try {
+    const { sort_by, order_by } = req.query;
+
     const data = await knex
       .select('inventories.id', 'inventories.item_name', 'inventories.description', 'inventories.category', 'inventories.status', 'inventories.quantity', 'warehouses.warehouse_name as warehouse_name')
       .from('inventories')
       .join('warehouses', 'inventories.warehouse_id', 'warehouses.id')
+      .orderBy( sort_by, order_by);
 
     res.status(200).json(data);
   } catch (err) {
