@@ -3,10 +3,8 @@ const { isValidEmail, isValidPhone } = require('../utils/validator');
 
 const index = async (req, res) => {
   try {
-    
     const { sort_by, order_by } = req.query;
-    const data = await knex('warehouses')
-    .orderBy( sort_by, order_by);
+    const data = await knex('warehouses').orderBy(sort_by, order_by);
 
     // console.log(req, sort_by, order_by );
     // .orderBy('warehouse_name', 'desc');
@@ -110,47 +108,45 @@ const deleteWarehouse = async (req, res) => {
 };
 const update = async (req, res) => {
   try {
-      const rowsUpdated = await knex("user")
-          .where({ id: req.params.id })
-          .update(req.body);
+    const rowsUpdated = await knex('user').where({ id: req.params.id }).update(req.body);
 
-      //chexk if anything was updatd or found
-      if (!rowsUpdated) { // equal to rowsupdated === 0
-          return res.status(404).json({
-              message: `User with ID ${req.params.id} not found` 
-          });
-      }
+    //chexk if anything was updatd or found
+    if (!rowsUpdated) {
+      // equal to rowsupdated === 0
+      return res.status(404).json({
+        message: `User with ID ${req.params.id} not found`,
+      });
+    }
 
-      //get anupdated record
-      const updatedUser = await knex('user')
-          .where({ id: req.params.id });
+    //get anupdated record
+    const updatedUser = await knex('user').where({ id: req.params.id });
 
-      res.status(201).json(updatedUser);
+    res.status(201).json(updatedUser);
   } catch (error) {
-      res.status(500).json({
-          message: `Unable to update user with ID ${req.params.id}: ${error}` 
-        }); 
+    res.status(500).json({
+      message: `Unable to update user with ID ${req.params.id}: ${error}`,
+    });
   }
 };
 
 const inventories = async (req, res) => {
   try {
     //Check if warehouse is in table
-    const foundWarehouse = await knex("warehouses").where({ id: req.params.warehouse_id });
-    
+    const foundWarehouse = await knex('warehouses').where({ id: req.params.warehouse_id });
+
     if (!foundWarehouse.length) {
-      return res.status(404).json({ message: "Warehouse was not found" });
+      return res.status(404).json({ message: 'Warehouse was not found' });
     }
 
     //Use found warehouse id to return inventory list
-    const warehouseInventories = await knex("inventories")
+    const warehouseInventories = await knex('inventories')
       .where({
         warehouse_id: foundWarehouse[0].id,
       })
-      .select("*");
+      .select('*');
     //Return 400 if inventory list empty
     if (warehouseInventories.length === 0) {
-      res.status(500).json({ message: "Warehouse is empty!" });
+      res.status(500).json({ message: 'Warehouse is empty!' });
       //Otherwise return inventory list
     } else {
       res.status(200).json(warehouseInventories);
@@ -160,7 +156,6 @@ const inventories = async (req, res) => {
     res.status(500).json({ error: error });
   }
 };
-
 
 module.exports = {
   index,

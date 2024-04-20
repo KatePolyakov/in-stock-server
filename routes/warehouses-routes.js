@@ -1,13 +1,15 @@
 const router = require('express').Router();
 const warehousesController = require('../controllers/warehouses-controller');
 
-router.route('/warehouses')
+router
+  .route('/warehouses')
   .get(warehousesController.index)
-  .post(warehousesController.postWarehouse)
+  .post(warehousesController.postWarehouse);
 
-router.route('/warehouses/:warehouse_id')
+router
+  .route('/warehouses/:warehouse_id')
   .get(warehousesController.singleWarehouse)
-  .delete(warehousesController.deleteWarehouse)
+  .delete(warehousesController.deleteWarehouse);
 
 router.route('/warehouses/:warehouse_id/inventories').get(warehousesController.inventories);
 
