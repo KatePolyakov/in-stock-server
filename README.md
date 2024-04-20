@@ -31,6 +31,11 @@ CREATE a New Warehouse Request body example:
 }
 
 DELETE APIs:
-
 http://localhost:8080/api/warehouses/:warehouse_id
 i.e. http://localhost:8080/api/warehouses/10
+
+Sorting functionality in ascending/descending order api example requests:
+
+http://localhost:8080/api/warehouses?sort_by=warehouse_name&order_by=desc
+
+http://localhost:8080/api/inventories-warehouses?sort_by=item_name&order_by=asc
