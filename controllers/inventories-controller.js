@@ -7,7 +7,7 @@ const getOneInventory = async (req, res) => {
 
     if(!oneInventory) {
       return res.status(404).json({
-        message: `inventory with ID ${req.params.idinventoryId} not found`
+        message: `inventory with ID ${req.params.inventoryId} not found`
       });
     }
     res.status(200).json(oneInventory)

@@ -5,10 +5,6 @@ const index = async (req, res) => {
   try {
     const { sort_by, order_by } = req.query;
     const data = await knex('warehouses').orderBy(sort_by, order_by);
-
-    // console.log(req, sort_by, order_by );
-    // .orderBy('warehouse_name', 'desc');
-    // .orderBy('warehouse_name', 'asc');
     res.status(200).json(data);
   } catch (err) {
     res.status(400).send(`Error retrieving Users: ${err}`);
