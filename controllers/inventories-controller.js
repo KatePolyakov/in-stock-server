@@ -1,6 +1,23 @@
 const knex = require('knex')(require('../knexfile'));
 const { isValidInventoryData } = require('../utils/validator');
 
+const getOneInventory = async (req, res) => {
+  try {
+    const oneInventory = await knex('inventories').where({id: req.params.inventoryId}).first();
+
+    if(!oneInventory) {
+      return res.status(404).json({
+        message: `inventory with ID ${req.params.idinventoryId} not found`
+      });
+    }
+    res.status(200).json(oneInventory)
+  } catch (error) {
+    res.status(500).json({
+      message: `Unable to retrieve data for inventory with ID ${req.params.inventoryId} error: ${error}`,
+    });
+  }
+}
+
 const inventoryWarehouseList = async (req, res) => {
   try {
     const { sort_by, order_by } = req.query;
@@ -59,4 +76,5 @@ module.exports = {
   inventoryWarehouseList,
   postInventoryItem,
   updateInventoryItem,
+  getOneInventory
 };
