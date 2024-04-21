@@ -22,7 +22,7 @@ http://localhost:8080/api/warehouses
 
 CREATE a New Warehouse Request body example:
 {
-    "warehouse_name": "Chicago",
+    "warehouse_name": "Canada",
     "address": "3218 Guess Rd",
     "city": "Chicago",
     "country": "USA",

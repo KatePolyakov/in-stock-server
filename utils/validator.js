@@ -40,8 +40,55 @@ const isValidInventoryData = async (req, res) => {
   return errors
 }
 
+const isValidWarehouseData = (data) => {
+  const {
+    warehouse_name,
+    address,
+    city,
+    country,
+    contact_name,
+    contact_position,
+    contact_phone,
+    contact_email,
+  } = data;
+  const errors = [];
+
+  if (!warehouse_name) {
+    errors.push('Missing required field: warehouse_name');
+  }
+  if (!address) {
+    errors.push('Missing required field: address');
+  }
+  if (!city) {
+    errors.push('Missing required field: city');
+  }
+  if (!country) {
+    errors.push('Missing required field: country');
+  }
+  if (!contact_name) {
+    errors.push('Missing required field: contact_name');
+  }
+  if (!contact_position) {
+    errors.push('Missing required field: contact_position');
+  }
+  if (!contact_phone) {
+    errors.push('Missing required field: contact_phone');
+  } else if (!isValidPhone(contact_phone)) {
+    errors.push('Invalid phone number format for contact_phone');
+  }
+  if (!contact_email) {
+    errors.push('Missing required field: contact_email');
+  } else if (!isValidEmail(contact_email)) {
+    errors.push('Invalid email format for contact_email');
+  }
+  
+  return errors;
+};
+
+
 module.exports = {
   isValidEmail,
   isValidPhone,
   isValidInventoryData,
+  isValidWarehouseData
 };
