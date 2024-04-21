@@ -19,15 +19,15 @@ const isValidPhone = (phone) => {
 
 const isValidInventoryData = async (req, res) => {
   const { 
-    warehouse_id, 
+    warehouse_id,
     item_name, 
     description, 
     category, 
     status, 
-    quantity 
+    quantity, 
   } = req.body
   const errors = []
-  if (!warehouse_id || !item_name || !description || !category || !status || !quantity) {
+  if (!warehouse_id || !item_name || !description || !category || !status || quantity < 0) {
     errors.push('Missing properties in the request body')
   }
   const warehouseExists = await knex('warehouses').where('id', warehouse_id).first()
