@@ -4,7 +4,11 @@ const { isValidWarehouseData } = require('../utils/validator');
 const index = async (req, res) => {
   try {
     const { sort_by, order_by } = req.query;
-    const data = await knex('warehouses').orderBy(sort_by, order_by);
+    let query = knex('warehouses');
+    if (sort_by && typeof sort_by === 'string' && sort_by.trim() !== '') {
+      query = query.orderBy(sort_by, order_by || 'asc');
+    }
+    const data = await query;
     res.status(200).json(data);
   } catch (err) {
     res.status(400).send(`Error retrieving Users: ${err}`);
