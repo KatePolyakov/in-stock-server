@@ -9,7 +9,8 @@ router
 router
   .route('/warehouses/:warehouse_id')
   .get(warehousesController.singleWarehouse)
-  .delete(warehousesController.deleteWarehouse);
+  .delete(warehousesController.deleteWarehouse)
+  .put(warehousesController.updateWarehouse);
 
 router.route('/warehouses/:warehouse_id/inventories').get(warehousesController.inventories);
 

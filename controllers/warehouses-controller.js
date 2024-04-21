@@ -102,25 +102,73 @@ const deleteWarehouse = async (req, res) => {
     });
   }
 };
-const update = async (req, res) => {
-  try {
-    const rowsUpdated = await knex('user').where({ id: req.params.id }).update(req.body);
+const updateWarehouse = async (req, res) => {
+  const {
+    warehouse_name,
+    address,
+    city,
+    country,
+    contact_name,
+    contact_position,
+    contact_phone,
+    contact_email,
+  } = req.body;
+  const errors = [];
 
-    //chexk if anything was updatd or found
+  if (!warehouse_name) {
+    errors.push('Missing required field: warehouse_name');
+  }
+  if (!address) {
+    errors.push('Missing required field: address');
+  }
+  if (!city) {
+    errors.push('Missing required field: city');
+  }
+  if (!country) {
+    errors.push('Missing required field: country');
+  }
+  if (!contact_name) {
+    errors.push('Missing required field: contact_name');
+  }
+  if (!contact_position) {
+    errors.push('Missing required field: contact_position');
+  }
+  if (!contact_phone) {
+    errors.push('Missing required field: contact_phone');
+  } else if (!isValidPhone(contact_phone)) {
+    errors.push('Invalid phone number format for contact_phone');
+  }
+  if (!contact_email) {
+    errors.push('Missing required field: contact_email');
+  } else if (!isValidEmail(contact_email)) {
+    errors.push('Invalid email format for contact_email');
+  }
+  if (errors.length > 0) {
+    return res.status(400).json({ errors });
+  }
+  try {
+    const rowsUpdated = await knex('warehouses')
+      .where({ id: req.params.warehouse_id })
+      .update({
+        warehouse_name,
+        address,
+        city,
+        country,
+        contact_name,
+        contact_position,
+        contact_phone,
+        contact_email
+      });
     if (!rowsUpdated) {
-      // equal to rowsupdated === 0
       return res.status(404).json({
-        message: `User with ID ${req.params.id} not found`,
+        message: `Warehouse with ID ${req.params.warehouse_id} not found`,
       });
     }
-
-    //get anupdated record
-    const updatedUser = await knex('user').where({ id: req.params.id });
-
-    res.status(201).json(updatedUser);
+    const updatedWarehouse = await knex('warehouses').where({ id: req.params.warehouse_id });
+    res.status(201).json(updatedWarehouse);
   } catch (error) {
     res.status(500).json({
-      message: `Unable to update user with ID ${req.params.id}: ${error}`,
+      message: `Unable to update Warehouse with ID ${req.params.id}: ${error}`,
     });
   }
 };
@@ -159,4 +207,5 @@ module.exports = {
   postWarehouse,
   deleteWarehouse,
   inventories,
+  updateWarehouse
 };
