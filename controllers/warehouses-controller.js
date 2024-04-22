@@ -66,7 +66,6 @@ const postWarehouse = async (req, res) => {
   if (errors.length > 0) {
     return res.status(400).json({ errors });
   }
-
   try {
     const result = await knex('warehouses').insert(req.body);
     const newWarehouseId = result[0];
@@ -87,10 +86,30 @@ const updateWarehouse = async (req, res) => {
   if (errors.length > 0) {
     return res.status(400).json({ errors });
   }
+  const {
+    warehouse_name,
+    address,
+    city,
+    country,
+    contact_name,
+    contact_position,
+    contact_phone,
+    contact_email,
+  } = req.body;
+
   try {
     const rowsUpdated = await knex('warehouses')
       .where({ id: req.params.warehouse_id })
-      .update(req.body);
+      .update({
+        warehouse_name,
+        address,
+        city,
+        country,
+        contact_name,
+        contact_position,
+        contact_phone,
+        contact_email,
+      });
     if (!rowsUpdated) {
       return res.status(404).json({
         message: `Warehouse with ID ${req.params.warehouse_id} not found`,
