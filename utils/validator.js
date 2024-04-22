@@ -5,9 +5,9 @@ const isValidEmail = (email) => {
   return emailPattern.test(email);
 }
 
-const isValidPhone = (phone) => {
-  const usCanadaRegex = /^\+?1\s?\(\d{3}\)\s?\d{3}-\d{4}$/;
-  const internationalRegex = /^\+\d{1,2}\s?\d{3,}\s?\d{3,}$/;
+ const isValidPhone = (phone) => {
+  const usCanadaRegex = /^(\+?1\s?)?(\(\d{3}\)|\d{3})[-.\s]?\d{3}[-.\s]?\d{4}$/;
+  const internationalRegex = /^\+(?:[0-9] ?){6,14}[0-9]$/;
   const indiaRegex = /^[6-9]\d{9}$/;
 
   if (usCanadaRegex.test(phone) || internationalRegex.test(phone) || indiaRegex.test(phone)) {
