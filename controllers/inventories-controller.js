@@ -20,9 +20,8 @@ const getOneInventory = async (req, res) => {
 
 const inventoryWarehouseList = async (req, res) => {
   try {
-    const { sort_by, order_by } = req.query;
-
-    const data = await knex
+    const { sort_by, order_by, s } = req.query;
+    let query = knex
       .select(
         'inventories.id',
         'inventories.item_name',
@@ -33,8 +32,24 @@ const inventoryWarehouseList = async (req, res) => {
         'warehouses.warehouse_name as warehouse_name',
       )
       .from('inventories')
-      .join('warehouses', 'inventories.warehouse_id', 'warehouses.id')
-      .orderBy(sort_by, order_by);
+      .join('warehouses', 'inventories.warehouse_id', 'warehouses.id');
+
+    if (sort_by && typeof sort_by === 'string' && sort_by.trim() !== '') {
+      query = query.orderBy(sort_by, order_by || 'asc');
+    }
+
+    if (s) {
+      const searchTerm = `%${s}%`;
+      query = query.where(function () {
+        this.where('inventories.item_name', 'like', searchTerm)
+          .orWhere('inventories.description', 'like', searchTerm)
+          .orWhere('inventories.category', 'like', searchTerm)
+          .orWhere('inventories.status', 'like', searchTerm)
+          .orWhere('warehouses.warehouse_name', 'like', searchTerm);
+      });
+    }
+
+    const data = await query;
 
     res.status(200).json(data);
   } catch (err) {

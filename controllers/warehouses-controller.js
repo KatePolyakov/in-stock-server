@@ -3,10 +3,22 @@ const { isValidWarehouseData } = require('../utils/validator');
 
 const index = async (req, res) => {
   try {
-    const { sort_by, order_by } = req.query;
+    const { sort_by, order_by, s } = req.query;
     let query = knex('warehouses');
     if (sort_by && typeof sort_by === 'string' && sort_by.trim() !== '') {
       query = query.orderBy(sort_by, order_by || 'asc');
+    }
+    if (s) {
+      const searchTerm = `%${s}%`;
+      query = query.where(function () {
+        this.where('warehouse_name', 'like', searchTerm)
+          .orWhere('address', 'like', searchTerm)
+          .orWhere('city', 'like', searchTerm)
+          .orWhere('country', 'like', searchTerm)
+          .orWhere('contact_name', 'like', searchTerm)
+          .orWhere('contact_email', 'like', searchTerm)
+          .orWhere('contact_phone', 'like', searchTerm);
+      });
     }
     const data = await query;
     res.status(200).json(data);
